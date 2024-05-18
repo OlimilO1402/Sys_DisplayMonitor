@@ -54,13 +54,11 @@ End Function
 Private Function MonitorEnumProc(ByVal HMonitor_Param1 As LongPtr, ByVal hDC_Param2 As LongPtr, ByVal lpRECT_Param3 As LongPtr, ByVal Param4 As LongPtr) As Long
     If m_Monitors Is Nothing Then Set m_Monitors = New Collection
     Dim aMonitor As Monitor: Set aMonitor = MNew.Monitor(HMonitor_Param1, hDC_Param2, lpRECT_Param3)
-    'm_Count = m_Count - 1
     If aMonitor.Handle <> 0 Then
         m_Monitors.Add aMonitor
         MonitorEnumProc = 1
         Exit Function
     End If
-    'If m_Count <= 0 Then Exit Function
 End Function
 
 Public Property Get Count() As Long

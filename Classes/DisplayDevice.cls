@@ -94,8 +94,8 @@ Private Function GetDeviceModes(ByVal DevName As String, ByVal iMode As Long, By
     Do
         Set dm = New DeviceMode ' MNew.DeviceMode(DevName)
         Dim hr As Long
-        'hr = EnumDisplaySettingsExW(StrPtr(DevName), iMode, dm.Ptr, iFlag)
-        hr = EnumDisplaySettingsExW(StrPtr(DevName), i, dm.Ptr, iFlag)
+        hr = EnumDisplaySettingsExW(StrPtr(DevName), iMode, dm.Ptr, iFlag)
+        'hr = EnumDisplaySettingsExW(StrPtr(DevName), i, dm.Ptr, iFlag)
         'hr = EnumDisplaySettingsExW(0&, i, dm.Ptr, iFlag)
         If hr Then Settings.Add dm
         i = i + 1
@@ -109,8 +109,8 @@ Public Property Get SettingsCurrent() As Collection
 End Property
 
 Public Property Get SettingsRegistry() As Collection
-    'If m_RegSettings Is Nothing Then Set m_RegSettings = GetDeviceModes(Me.Name, ENUM_REGISTRY_SETTINGS)
-    Set m_RegSettings = New Collection
+    If m_RegSettings Is Nothing Then Set m_RegSettings = GetDeviceModes(Me.Display, ENUM_REGISTRY_SETTINGS, EDS_ROTATEDMODE)
+    'Set m_RegSettings = New Collection
     Set SettingsRegistry = m_RegSettings
 End Property
 
