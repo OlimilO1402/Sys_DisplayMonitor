@@ -20,3 +20,8 @@ End Function
 'Public Function DisplayDevices(ByVal DevName As String) As DisplayDevices
 '    Set DisplayDevices = New DisplayDevices: DisplayDevices.New_ DevName
 'End Function
+'
+'Public Function DeviceMode(ByVal DeviceName As String) As DeviceMode
+'    Set DeviceMode = New DeviceMode: DeviceMode.New_ DeviceName
+'End Function
+

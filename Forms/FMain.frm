@@ -29,21 +29,21 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   3375
+      Height          =   5775
       Left            =   2400
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
       TabIndex        =   6
-      Top             =   7080
+      Top             =   4680
       Width           =   12375
    End
    Begin VB.ListBox List3 
-      Height          =   3375
+      Height          =   5670
       ItemData        =   "FMain.frx":1782
       Left            =   0
       List            =   "FMain.frx":1784
       TabIndex        =   5
-      Top             =   7080
+      Top             =   4680
       Width           =   2415
    End
    Begin VB.TextBox Text2 
@@ -56,21 +56,21 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   3375
+      Height          =   2175
       Left            =   2400
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
       TabIndex        =   4
-      Top             =   3720
+      Top             =   2520
       Width           =   12375
    End
    Begin VB.ListBox List2 
-      Height          =   3375
+      Height          =   2100
       ItemData        =   "FMain.frx":1786
       Left            =   0
       List            =   "FMain.frx":1788
       TabIndex        =   3
-      Top             =   3720
+      Top             =   2520
       Width           =   2415
    End
    Begin VB.CommandButton Command1 
@@ -91,7 +91,7 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   3375
+      Height          =   2175
       Left            =   2400
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
@@ -100,7 +100,7 @@ Begin VB.Form FMain
       Width           =   12375
    End
    Begin VB.ListBox List1 
-      Height          =   3375
+      Height          =   2100
       ItemData        =   "FMain.frx":178A
       Left            =   0
       List            =   "FMain.frx":178C
@@ -141,7 +141,7 @@ End Sub
 Private Sub List3_Click()
     Dim i As Long: i = List3.ListIndex
     If i < 0 Then Exit Sub
-    Dim c As Long: m_Device.SettingsCurrent.Count
+    Dim c As Long: c = m_Device.SettingsCurrent.Count
     If i <= c Then
         Set m_Mode = m_Device.SettingsCurrent.Item(i + 1)
     Else
@@ -208,6 +208,6 @@ Sub UpdateViewDeviceMode(Mode As DeviceMode)
         Exit Sub
     End If
     Text3.Text = Mode.ToStr
-    Debug.Print Mode.Size
+    'Debug.Print Mode.Size
     
 End Sub

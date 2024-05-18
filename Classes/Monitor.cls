@@ -208,5 +208,5 @@ Friend Function ToStr() As String
     If Not RECT_IsNull(m_Clip) Then
         s = s & "    Clip-" & RECT_ToStr(m_Clip) & vbCrLf
     End If
-    ToStr = s & "}" & vbCrLf
+    ToStr = s & "}" '& vbCrLf
 End Function

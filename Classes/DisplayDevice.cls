@@ -62,6 +62,13 @@ Public Property Get Name() As String
     Name = Trim0(m_Display.DeviceName)
 End Property
 
+Public Property Get Display() As String
+    Dim dn As String: dn = m_Display.DeviceName
+    Dim pos As Long: pos = InStrRev(dn, "\")
+    If pos > 0 Then dn = Left(dn, pos - 1)
+    Display = dn 'Trim0(m_Display.DeviceName)
+End Property
+
 Public Property Get Device() As String
     Device = Trim0(m_Display.DeviceString)
 End Property
@@ -82,13 +89,14 @@ Private Function GetDeviceModes(ByVal DevName As String, ByVal iMode As Long, By
     Dim Settings As New Collection
     Dim dm As DeviceMode
     Dim i As Long
+    DevName = DevName & vbNullChar
+    'DevName = "\\.\DISPLAY2" & vbNullChar
     Do
-        Set dm = New DeviceMode
-        DevName = DevName & vbNullChar
+        Set dm = New DeviceMode ' MNew.DeviceMode(DevName)
         Dim hr As Long
         'hr = EnumDisplaySettingsExW(StrPtr(DevName), iMode, dm.Ptr, iFlag)
-        'hr = EnumDisplaySettingsExW(StrPtr(DevName), i, dm.Ptr, iFlag)
-        hr = EnumDisplaySettingsExW(0&, i, dm.Ptr, iFlag)
+        hr = EnumDisplaySettingsExW(StrPtr(DevName), i, dm.Ptr, iFlag)
+        'hr = EnumDisplaySettingsExW(0&, i, dm.Ptr, iFlag)
         If hr Then Settings.Add dm
         i = i + 1
     Loop Until hr = 0
@@ -96,7 +104,7 @@ Private Function GetDeviceModes(ByVal DevName As String, ByVal iMode As Long, By
 End Function
 
 Public Property Get SettingsCurrent() As Collection
-    If m_CurSettings Is Nothing Then Set m_CurSettings = GetDeviceModes(Me.Name, ENUM_CURRENT_SETTINGS, EDS_RAWMODE) '1)
+    If m_CurSettings Is Nothing Then Set m_CurSettings = GetDeviceModes(Me.Display, ENUM_CURRENT_SETTINGS, EDS_ROTATEDMODE) ' EDS_RAWMODE) '1)
     Set SettingsCurrent = m_CurSettings
 End Property
 
