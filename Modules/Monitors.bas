@@ -9,7 +9,7 @@ Private Type RECT
 End Type
 
 
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors
+'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors
 'BOOL EnumDisplayMonitors([in] HDC hdc, [in] LPCRECT lprcClip, [in] MONITORENUMPROC lpfnEnum, [in] LPARAM dwData);
 Private Declare Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr, ByVal lprcClip As LongPtr, ByVal lpfnEnum As LongPtr, ByVal dwData As LongPtr) As Long
 '[in] hdc:      Ein Handle für einen Anzeigegerätekontext, der den sichtbaren Bereich von Interesse definiert. Wenn dieser Parameter NULL ist, ist der hdcMonitor-Parameter, der
@@ -20,7 +20,7 @@ Private Declare Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr,
 '[in] lpfnEnum: Ein Zeiger auf eine anwendungsdefinierte Rückruffunktion von MonitorEnumProc .
 '[In] dwData:   Anwendungsdefinierte Daten, die EnumDisplayMonitors direkt an die MonitorEnumProc-Funktion übergibt.
 
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nc-winuser-monitorenumproc
+'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-monitorenumproc
 'MONITORENUMPROC Monitorenumproc;
 'BOOL Monitorenumproc( HMONITOR unnamedParam1, HDC unnamedParam2, LPRECT unnamedParam3, LPARAM unnamedParam4) {...}
 

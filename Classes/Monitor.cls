@@ -37,8 +37,8 @@ End Type
 Private Const EDD_GET_DEVICE_INTERFACE_NAME As Long = &H1&
 Private Const GUID_DEVINTERFACE_MONITOR As Long = 0
 
-'https://learn.microsoft.com/de-de/windows/win32/api/Winuser/ns-winuser-monitorinfo
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/ns-winuser-monitorinfoexw
+'https://learn.microsoft.com/en-us/windows/win32/api/Winuser/ns-winuser-monitorinfo
+'https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfoexw
 Private Type MONITORINFO
     cbSize    As Long
     rcMonitor As RECT
@@ -167,9 +167,9 @@ Private Function GetDisplayDevices(ByVal DevName As String) As Collection
     Dim Displays As New Collection
     Dim dd As DisplayDevice
     Dim i As Long
+    DevName = DevName & vbNullChar
     Do
         Set dd = New DisplayDevice
-        DevName = DevName & vbNullChar
         Dim hr As Long: hr = EnumDisplayDevicesW(StrPtr(DevName), i, dd.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
         If hr Then Displays.Add dd
         i = i + 1
