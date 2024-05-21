@@ -35,7 +35,7 @@ Private Type RECT
 End Type
 
 Private Const EDD_GET_DEVICE_INTERFACE_NAME As Long = &H1&
-Private Const GUID_DEVINTERFACE_MONITOR As Long = 0
+Private Const GUID_DEVINTERFACE_MONITOR     As Long = 0
 
 'https://learn.microsoft.com/en-us/windows/win32/api/Winuser/ns-winuser-monitorinfo
 'https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfoexw
@@ -74,6 +74,7 @@ Private m_hDC      As LongPtr
 Private m_Clip     As RECT
 'Private m_Displays As DisplayDevices
 Private m_Displays As Collection
+Private m_Adapters As Collection
 
 Private Sub Class_Initialize()
     m_Info = GetMonitor(MonitorFromPoint(0, 0, MONITOR_DEFAULTTOPRIMARY)) 'default to primary
@@ -158,22 +159,33 @@ Public Property Get Displays() As Collection 'Of DisplayDevice
     If m_Displays Is Nothing Then Set m_Displays = GetDisplayDevices(Me.Name)
     Set Displays = m_Displays
 End Property
-'Public Property Get Display(ByVal Index As Long) As DisplayDevice
-'    If m_Displays Is Nothing Then Set m_Displays = GetDisplayDevices(Me.Name)
-'    If Index < m_Displays.Count Then Set Display = m_Displays.Item(Index + 1)
-'End Property
+
+Public Property Get Adapters() As Collection ' Of DisplayDevice
+    If m_Adapters Is Nothing Then Set m_Adapters = GetDisplayDevices(vbNullString)
+    Set Adapters = m_Adapters
+End Property
+
+Private Function GetDisplayDevice(ByVal DevName As String, ByVal i As Long) As DisplayDevice
+    Dim dd As New DisplayDevice
+    Dim lpDevNam As LongPtr
+    If Len(DevName) Then
+        DevName = DevName & vbNullChar
+        lpDevNam = StrPtr(DevName)
+    End If
+    Dim hr As Long: hr = EnumDisplayDevicesW(lpDevNam, i, dd.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
+    If hr Then Set GetDisplayDevice = dd
+End Function
 
 Private Function GetDisplayDevices(ByVal DevName As String) As Collection
     Dim Displays As New Collection
     Dim dd As DisplayDevice
     Dim i As Long
-    DevName = DevName & vbNullChar
     Do
-        Set dd = New DisplayDevice
-        Dim hr As Long: hr = EnumDisplayDevicesW(StrPtr(DevName), i, dd.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
-        If hr Then Displays.Add dd
+        Set dd = GetDisplayDevice(DevName, i)
+        If dd Is Nothing Then Exit Do
+        Displays.Add dd
         i = i + 1
-    Loop Until hr = 0
+    Loop
     Set GetDisplayDevices = Displays
 End Function
 

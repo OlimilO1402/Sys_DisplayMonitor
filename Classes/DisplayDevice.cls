@@ -144,7 +144,11 @@ Friend Function ToStr() As String
     s = s & "    DeviceName = " & Me.DeviceName & vbCrLf
     s = s & "    Flags      = " & Me.Flags & vbCrLf
     s = s & "    Device     = " & Me.Device & vbCrLf
-    s = s & "    cur-set    = " & Me.SettingCurrent.ShortToStr & vbCrLf
-    s = s & "    reg-set    = " & Me.SettingRegistry.ShortToStr & vbCrLf
+    If Not m_CurSetting Is Nothing Then
+        s = s & "    cur-set    = " & Me.SettingCurrent.ShortToStr & vbCrLf
+    End If
+    If Not m_RegSetting Is Nothing Then
+        s = s & "    reg-set    = " & Me.SettingRegistry.ShortToStr & vbCrLf
+    End If
     ToStr = s & "}" '& vbCrLf
 End Function
