@@ -430,7 +430,7 @@ End Function
 
 Friend Function ToStr() As String
     Dim f As Long: f = Me.Fields
-    Dim s As String: s = "DeviceMode {" & vbCrLf
+    Dim s As String: s = "DEVICEMODEW {" & vbCrLf
     s = s & "    DeviceName         = " & Me.DeviceName & vbCrLf
     s = s & "    Fields             = " & Me.Fields & vbCrLf
     s = s & "    Size               = " & Me.Size & vbCrLf

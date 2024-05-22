@@ -208,7 +208,7 @@ End Function
 
 Friend Function ToStr() As String
     Dim s As String
-    s = "Monitor{" & vbCrLf
+    s = "MONITORINFO {" & vbCrLf
     s = s & "    Name  = " & Me.Name & vbCrLf
     s = s & "    Handle= " & m_Handle & vbCrLf
     s = s & "    W / H = " & Me.Width & " / " & Me.Height & vbCrLf

@@ -156,6 +156,7 @@ Private m_Device  As DisplayDevice
 Private m_Mode    As DeviceMode
 
 Private Sub Form_Load()
+    Me.Caption = Me.Caption & " v" & App.Major & "." & App.Minor & "." & App.Revision
     'Ähm so ein Mist meine Verschachtelungstheorie ist Mist
     'wir haben
     'Monitors -> List Of Monitor -> List Of DisplayDevice -> List Of DeviceMode

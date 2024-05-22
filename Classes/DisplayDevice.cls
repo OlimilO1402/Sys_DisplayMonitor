@@ -20,6 +20,17 @@ Private Const ENUM_REGISTRY_SETTINGS As Long = -2& ' Rufen Sie die Einstellungen
 Private Const EDS_RAWMODE     As Long = 2 ' Wenn diese Einstellung festgelegt ist, gibt die Funktion unabhängig von den Überwachungsfunktionen alle Grafikmodi zurück, die vom Adaptertreiber gemeldet werden. Andernfalls werden nur Modi zurückgegeben, die mit aktuellen Monitoren kompatibel sind.
 Private Const EDS_ROTATEDMODE As Long = 4 ' Wenn festgelegt, gibt die Funktion Grafikmodi in allen Ausrichtungen zurück. Andernfalls werden nur Modi zurückgegeben, die die gleiche Ausrichtung haben wie die derzeit für die angeforderte Anzeige festgelegte.
 
+'StateFlags:
+
+Private Const DISPLAY_DEVICE_ATTACHED_TO_DESKTOP As Long = &H1&
+Private Const DISPLAY_DEVICE_ACTIVE              As Long = &H1&       ' specifies whether a monitor is presented as being "on" by the respective GDI view. Windows Vista: EnumDisplayDevices will only enumerate monitors that can be presented as being "on."
+Private Const DISPLAY_DEVICE_MULTI_DRIVER        As Long = &H2&
+Private Const DISPLAY_DEVICE_PRIMARY_DEVICE      As Long = &H4&       ' The primary desktop is on the device. For a system with a single display card, this is always set. For a system with multiple display cards, only one device can have this set.
+Private Const DISPLAY_DEVICE_MIRRORING_DRIVER    As Long = &H8&       ' Represents a pseudo device used to mirror application drawing for remoting or other purposes. An invisible pseudo monitor is associated with this device. For example, NetMeeting uses it. Note that GetSystemMetrics (SM_MONITORS) only accounts for visible display monitors.
+Private Const DISPLAY_DEVICE_VGA_COMPATIBLE      As Long = &H10&      ' The device is VGA compatible.
+Private Const DISPLAY_DEVICE_REMOVABLE           As Long = &H20&       ' The device is removable; it cannot be the primary display.
+Private Const DISPLAY_DEVICE_MODESPRUNED         As Long = &H8000000  ' The device has more display modes than its output devices support.
+
 'https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-display_devicew
 'typedef struct _DISPLAY_DEVICEW {
 '  DWORD cb;
@@ -66,9 +77,10 @@ Public Property Get DeviceName() As String
 End Property
 
 Public Property Get Display() As String
-    Dim dn As String: dn = m_Display.DeviceName
-    Dim pos As Long: pos = InStrRev(dn, "\")
-    If pos > 0 Then dn = Left(dn, pos - 1)
+    Dim d0 As String: d0 = Me.DeviceName
+    Dim pos As Long: pos = InStrRev(d0, "\")
+    Dim dn As String: If pos > 0 Then dn = Left(d0, pos - 1)
+    If Len(dn) < 5 Then dn = d0
     Display = dn 'Trim0(m_Display.DeviceName)
 End Property
 
@@ -76,10 +88,26 @@ Public Property Get Device() As String
     Device = Trim0(m_Display.DeviceString)
 End Property
 
-Public Property Get Flags() As Long
-    Flags = m_Display.StateFlags
+Public Property Get StateFlags() As Long
+    StateFlags = m_Display.StateFlags
 End Property
-    
+
+Friend Function StateFlags_ToStr() As String
+    Dim sf As Long: sf = m_Display.StateFlags
+    Dim s As String
+    If sf And DISPLAY_DEVICE_ACTIVE Then s = s & IIf(Len(s), " Or ", "") & "DD_ACTIVE"           ' specifies whether a monitor is presented as being "on" by the respective GDI view. Windows Vista: EnumDisplayDevices will only enumerate monitors that can be presented as being "on."
+    If sf And DISPLAY_DEVICE_MULTI_DRIVER Then s = s & IIf(Len(s), " Or ", "") & "DD_MULTI_DRIVER"      '
+    If sf And DISPLAY_DEVICE_PRIMARY_DEVICE Then s = s & IIf(Len(s), " Or ", "") & "DD_PRIMARY_DEVICE"   ' The primary desktop is on the device. For a system with a single display card, this is always set. For a system with multiple display cards, only one device can have this set.
+    If sf And DISPLAY_DEVICE_MIRRORING_DRIVER Then s = s & IIf(Len(s), " Or ", "") & "DD_MIRRORING_DRIVER" ' Represents a pseudo device used to mirror application drawing for remoting or other purposes. An invisible pseudo monitor is associated with this device. For example, NetMeeting uses it. Note that GetSystemMetrics (SM_MONITORS) only accounts for visible display monitors.
+    If sf And DISPLAY_DEVICE_VGA_COMPATIBLE Then s = s & IIf(Len(s), " Or ", "") & "DD_VGA_COMPATIBLE"   ' The device is VGA compatible.
+    If sf And DISPLAY_DEVICE_REMOVABLE Then s = s & IIf(Len(s), " Or ", "") & "DD_REMOVABLE"        ' The device is removable; it cannot be the primary display.
+    If sf And DISPLAY_DEVICE_MODESPRUNED Then s = s & IIf(Len(s), " Or ", "") & "DD_MODESPRUNED"      ' The device has more display modes than its output devices support.
+    'case DISPLAY_DEVICE_ATTACHED_TO_DESKTOP As Long = &H1&
+    'Case Else:
+    'End Select
+    StateFlags_ToStr = s
+End Function
+
 Public Property Get ID() As String
     ID = Trim0(m_Display.DeviceID)
 End Property
@@ -138,11 +166,14 @@ End Property
 
 Friend Function ToStr() As String
     Dim s As String
-    s = "Display {" & vbCrLf
+    s = "DISPLAY_DEVICEW {" & vbCrLf
     s = s & "    ID         = " & Me.ID & vbCrLf
     s = s & "    Key        = " & Me.Key & vbCrLf
+    s = s & "    Device     = " & Me.Device & vbCrLf
+    s = s & "    Display    = " & Me.Display & vbCrLf
     s = s & "    DeviceName = " & Me.DeviceName & vbCrLf
-    s = s & "    Flags      = " & Me.Flags & vbCrLf
+    s = s & "    StateFlags = " & Me.StateFlags & vbCrLf
+    s = s & "    StateFlags = " & Me.StateFlags_ToStr & vbCrLf
     s = s & "    Device     = " & Me.Device & vbCrLf
     If Not m_CurSetting Is Nothing Then
         s = s & "    cur-set    = " & Me.SettingCurrent.ShortToStr & vbCrLf
