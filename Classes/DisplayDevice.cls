@@ -49,14 +49,17 @@ Private Type DISPLAY_DEVICEW
     DeviceKey(1 To 128 * 2)    As Byte
 End Type '} DISPLAY_DEVICEW, *PDISPLAY_DEVICEW, *LPDISPLAY_DEVICEW;
 
-'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw
-'BOOL EnumDisplaySettingsW([in] LPCWSTR lpszDeviceName, [in] DWORD iModeNum, [out] DEVMODEW *lpDevMode);
-'Private Declare Function EnumDisplaySettingsW Lib "user32" (ByVal lpszDeviceName As LongPtr, ByVal iModeNum As Long, ByVal lpDevMode As LongPtr) As Long
-
-'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw
-'BOOL EnumDisplaySettingsExW([in] LPCWSTR lpszDeviceName, [in] DWORD iModeNum, [out] DEVMODEW *lpDevMode, [in] DWORD dwFlags);
-Private Declare Function EnumDisplaySettingsExW Lib "user32" (ByVal lpszDeviceName As LongPtr, ByVal iModeNum As Long, ByVal lpDevMode As LongPtr, ByVal dwFlags As Long) As Long
-
+#If VBA7 Then
+    Private Declare PtrSafe Function EnumDisplaySettingsExW Lib "user32" (ByVal lpszDeviceName As LongPtr, ByVal iModeNum As Long, ByVal lpDevMode As LongPtr, ByVal dwFlags As Long) As Long
+#Else
+    'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw
+    'BOOL EnumDisplaySettingsW([in] LPCWSTR lpszDeviceName, [in] DWORD iModeNum, [out] DEVMODEW *lpDevMode);
+    'Private Declare Function EnumDisplaySettingsW Lib "user32" (ByVal lpszDeviceName As LongPtr, ByVal iModeNum As Long, ByVal lpDevMode As LongPtr) As Long
+    
+    'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw
+    'BOOL EnumDisplaySettingsExW([in] LPCWSTR lpszDeviceName, [in] DWORD iModeNum, [out] DEVMODEW *lpDevMode, [in] DWORD dwFlags);
+    Private Declare Function EnumDisplaySettingsExW Lib "user32" (ByVal lpszDeviceName As LongPtr, ByVal iModeNum As Long, ByVal lpDevMode As LongPtr, ByVal dwFlags As Long) As Long
+#End If
 Private m_Display     As DISPLAY_DEVICEW
 Private m_CurSetting  As DeviceMode
 Private m_RegSetting  As DeviceMode
@@ -174,7 +177,6 @@ Friend Function ToStr() As String
     s = s & "    DeviceName = " & Me.DeviceName & vbCrLf
     s = s & "    StateFlags = " & Me.StateFlags & vbCrLf
     s = s & "    StateFlags = " & Me.StateFlags_ToStr & vbCrLf
-    s = s & "    Device     = " & Me.Device & vbCrLf
     If Not m_CurSetting Is Nothing Then
         s = s & "    cur-set    = " & Me.SettingCurrent.ShortToStr & vbCrLf
     End If

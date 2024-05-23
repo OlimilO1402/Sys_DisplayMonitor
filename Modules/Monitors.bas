@@ -8,21 +8,24 @@ Private Type RECT
     Bottom As Long
 End Type
 
-
-'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors
-'BOOL EnumDisplayMonitors([in] HDC hdc, [in] LPCRECT lprcClip, [in] MONITORENUMPROC lpfnEnum, [in] LPARAM dwData);
-Private Declare Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr, ByVal lprcClip As LongPtr, ByVal lpfnEnum As LongPtr, ByVal dwData As LongPtr) As Long
-'[in] hdc:      Ein Handle für einen Anzeigegerätekontext, der den sichtbaren Bereich von Interesse definiert. Wenn dieser Parameter NULL ist, ist der hdcMonitor-Parameter, der
-'               an die Rückruffunktion übergeben wird, NULL, und der sichtbare Bereich von Interesse ist der virtuelle Bildschirm, der alle Anzeigen auf dem Desktop umfasst.
-'[in] lprcClip: Ein Zeiger auf eine RECT-Struktur , die ein Abschneiderechteck angibt. Der bereich von Interesse ist die Schnittmenge des Abschneiderechtecks mit dem sichtbaren Bereich,
-'               der von hdc angegeben wird. Wenn hdc nicht NULL ist, sind die Koordinaten des Abschneiderechtecks relativ zum Ursprung des hdc. Wenn hdcNULL ist, sind die Koordinaten
-'               virtuelle Bildschirmkoordinaten. Dieser Parameter kann NULL sein, wenn Sie die von hdc angegebene Region nicht ausschneiden möchten.
-'[in] lpfnEnum: Ein Zeiger auf eine anwendungsdefinierte Rückruffunktion von MonitorEnumProc .
-'[In] dwData:   Anwendungsdefinierte Daten, die EnumDisplayMonitors direkt an die MonitorEnumProc-Funktion übergibt.
-
-'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-monitorenumproc
-'MONITORENUMPROC Monitorenumproc;
-'BOOL Monitorenumproc( HMONITOR unnamedParam1, HDC unnamedParam2, LPRECT unnamedParam3, LPARAM unnamedParam4) {...}
+#If VBA7 Then
+    Private Declare PtrSafe Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr, ByVal lprcClip As LongPtr, ByVal lpfnEnum As LongPtr, ByVal dwData As LongPtr) As Long
+#Else
+    'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors
+    'BOOL EnumDisplayMonitors([in] HDC hdc, [in] LPCRECT lprcClip, [in] MONITORENUMPROC lpfnEnum, [in] LPARAM dwData);
+    Private Declare Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr, ByVal lprcClip As LongPtr, ByVal lpfnEnum As LongPtr, ByVal dwData As LongPtr) As Long
+    '[in] hdc:      Ein Handle für einen Anzeigegerätekontext, der den sichtbaren Bereich von Interesse definiert. Wenn dieser Parameter NULL ist, ist der hdcMonitor-Parameter, der
+    '               an die Rückruffunktion übergeben wird, NULL, und der sichtbare Bereich von Interesse ist der virtuelle Bildschirm, der alle Anzeigen auf dem Desktop umfasst.
+    '[in] lprcClip: Ein Zeiger auf eine RECT-Struktur , die ein Abschneiderechteck angibt. Der bereich von Interesse ist die Schnittmenge des Abschneiderechtecks mit dem sichtbaren Bereich,
+    '               der von hdc angegeben wird. Wenn hdc nicht NULL ist, sind die Koordinaten des Abschneiderechtecks relativ zum Ursprung des hdc. Wenn hdcNULL ist, sind die Koordinaten
+    '               virtuelle Bildschirmkoordinaten. Dieser Parameter kann NULL sein, wenn Sie die von hdc angegebene Region nicht ausschneiden möchten.
+    '[in] lpfnEnum: Ein Zeiger auf eine anwendungsdefinierte Rückruffunktion von MonitorEnumProc .
+    '[In] dwData:   Anwendungsdefinierte Daten, die EnumDisplayMonitors direkt an die MonitorEnumProc-Funktion übergibt.
+    
+    'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-monitorenumproc
+    'MONITORENUMPROC Monitorenumproc;
+    'BOOL Monitorenumproc( HMONITOR unnamedParam1, HDC unnamedParam2, LPRECT unnamedParam3, LPARAM unnamedParam4) {...}
+#End If
 
 Private m_hDC  As LongPtr
 Private m_Clip As RECT

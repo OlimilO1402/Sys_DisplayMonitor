@@ -65,7 +65,7 @@ Begin VB.Form FMain
       Width           =   5175
    End
    Begin VB.ListBox List3 
-      Height          =   4905
+      Height          =   5160
       ItemData        =   "FMain.frx":1786
       Left            =   0
       List            =   "FMain.frx":1788
@@ -165,6 +165,28 @@ Private Sub Form_Load()
     '                      -> List Of DeviceMode
     'PC -> List Of GraCard -> List Of DisplayDevice
     '                      -> List Of DeviceMode
+    
+    
+    ' PC -> (DisplayDevice/DisplayAdapter) GraCard-01 -> (DisplayDevice) Display-01 & MonitorInfo
+    '                                                 '> (DisplayDevice) Display-02 & MonitorInfo
+    '                                                 '> (DisplayDevice) Display-..
+    '                                                 '> (DisplayDevice) Display-nn
+    '
+    ' PC -> (DisplayDevice/DisplayAdapter) GraCard-02 -> (DisplayDevice) Display-01
+    '                                                 '> (DisplayDevice) Display-02
+    '                                                 '> (DisplayDevice) Display-..
+    '                                                 '> (DisplayDevice) Display-nn
+    '
+    ' PC -> (DisplayDevice/DisplayAdapter) GraCard-.. -> (DisplayDevice) Display-01
+    '                                                 '> (DisplayDevice) Display-02
+    '                                                 '> (DisplayDevice) Display-..
+    '                                                 '> (DisplayDevice) Display-nn
+    '
+    ' PC -> (DisplayDevice/DisplayAdapter) GraCard-nn -> (DisplayDevice) Display-01
+    '                                                 '> (DisplayDevice) Display-02
+    '                                                 '> (DisplayDevice) Display-..
+    '                                                 '> (DisplayDevice) Display-nn
+    
 End Sub
 
 Private Sub Command1_Click()

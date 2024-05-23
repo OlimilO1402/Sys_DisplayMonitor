@@ -47,25 +47,33 @@ Private Type MONITORINFO
     szDevice(1 To CCHDEVICENAME * 2) As Byte
 End Type
 
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfrompoint
-'HMONITOR MonitorFromPoint([in] POINT pt, [in] DWORD dwFlags);
-Private Declare Function MonitorFromPoint Lib "user32" (ByVal X As Long, ByVal Y As Long, ByVal dwFlags As Long) As LongPtr
-
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfromrect
-'HMONITOR MonitorFromRect([in] LPCRECT lprc, [in] DWORD dwFlags);
-Private Declare Function MonitorFromRect Lib "user32" (ByRef lprc As RECT, ByVal dwFlags As Long) As LongPtr
-
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfromwindow
-'HMONITOR MonitorFromWindow([in] HWND  hwnd, [in] DWORD dwFlags);
-Private Declare Function MonitorFromWindow Lib "user32" (ByVal hWnd As Long, ByVal dwFlags As Long) As LongPtr
-
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-getmonitorinfow
-'BOOL GetMonitorInfoW([in] HMONITOR hMonitor, [out] LPMONITORINFO lpmi);
-Private Declare Function GetMonitorInfoW Lib "user32" (ByVal HMONITOR As LongPtr, ByRef lpmi_out As MONITORINFO) As Long
-
-'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw
-'BOOL EnumDisplayDevicesW( [in] LPCWSTR lpDevice, [in] DWORD iDevNum, [out] PDISPLAY_DEVICEW lpDisplayDevice, [in] DWORD dwFlags);
-Private Declare Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
+#If VBA7 Then
+    Private Declare PtrSafe Function MonitorFromPoint Lib "user32" (ByVal X As Long, ByVal Y As Long, ByVal dwFlags As Long) As LongPtr
+    Private Declare PtrSafe Function MonitorFromRect Lib "user32" (ByRef lprc As RECT, ByVal dwFlags As Long) As LongPtr
+    Private Declare PtrSafe Function MonitorFromWindow Lib "user32" (ByVal hWnd As LongPtr, ByVal dwFlags As Long) As LongPtr
+    Private Declare PtrSafe Function GetMonitorInfoW Lib "user32" (ByVal HMONITOR As LongPtr, ByRef lpmi_out As MONITORINFO) As Long
+    Private Declare PtrSafe Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
+#Else
+    'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfrompoint
+    'HMONITOR MonitorFromPoint([in] POINT pt, [in] DWORD dwFlags);
+    Private Declare Function MonitorFromPoint Lib "user32" (ByVal X As Long, ByVal Y As Long, ByVal dwFlags As Long) As LongPtr
+    
+    'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfromrect
+    'HMONITOR MonitorFromRect([in] LPCRECT lprc, [in] DWORD dwFlags);
+    Private Declare Function MonitorFromRect Lib "user32" (ByRef lprc As RECT, ByVal dwFlags As Long) As LongPtr
+    
+    'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-monitorfromwindow
+    'HMONITOR MonitorFromWindow([in] HWND  hwnd, [in] DWORD dwFlags);
+    Private Declare Function MonitorFromWindow Lib "user32" (ByVal hWnd As LongPtr, ByVal dwFlags As Long) As LongPtr
+    
+    'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-getmonitorinfow
+    'BOOL GetMonitorInfoW([in] HMONITOR hMonitor, [out] LPMONITORINFO lpmi);
+    Private Declare Function GetMonitorInfoW Lib "user32" (ByVal HMONITOR As LongPtr, ByRef lpmi_out As MONITORINFO) As Long
+    
+    'https://learn.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw
+    'BOOL EnumDisplayDevicesW( [in] LPCWSTR lpDevice, [in] DWORD iDevNum, [out] PDISPLAY_DEVICEW lpDisplayDevice, [in] DWORD dwFlags);
+    Private Declare Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
+#End If
 
 Private m_Handle   As LongPtr
 Private m_Info     As MONITORINFO
