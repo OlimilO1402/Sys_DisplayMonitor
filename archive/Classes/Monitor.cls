@@ -76,41 +76,42 @@ End Type
     
 #End If
 
-Private m_Handle  As LongPtr
-Private m_Monitor As MONITORINFO
-Private m_Display As DisplayDevice
+Private m_Handle   As LongPtr
+Private m_Info     As MONITORINFO
+Private m_Display  As DisplayDevice
 
-Private m_Flag    As Long
-Private m_hDC     As LongPtr
-Private m_Clip    As RECT
-'Private m_Displays As Collection
-'Private m_Adapters As Collection
+Private m_Flag     As Long
+Private m_hDC      As LongPtr
+Private m_Clip     As RECT
+'Private m_Displays As DisplayDevices
+Private m_Displays As Collection
+Private m_Adapters As Collection
 
 Private Sub Class_Initialize()
-    m_Monitor = GetMonitor(MonitorFromPoint(0, 0, MONITOR_DEFAULTTOPRIMARY))  'default to primary
+    m_Info = GetMonitor(MonitorFromPoint(0, 0, MONITOR_DEFAULTTOPRIMARY)) 'default to primary
 End Sub
 
 Friend Sub New_(ByVal HMONITOR As LongPtr, ByVal hDC As LongPtr, ByVal lpClipRECT As LongPtr)
     m_hDC = hDC
     RtlMoveMemory m_Clip, ByVal lpClipRECT, LenB(m_Clip)
-    m_Monitor = GetMonitor(HMONITOR)
+    m_Info = GetMonitor(HMONITOR)
     Dim i As Long
     Set m_Display = New DisplayDevice: m_Display.New_ Me.Device, i
     If i < 0 Then Set m_Display = Nothing
 End Sub
 
 Friend Sub NewP(ByVal X As Long, ByVal Y As Long, Optional ByVal aFlag As EMonitorDefault = EMonitorDefault.ToNearest)
-    m_Monitor = GetMonitor(MonitorFromPoint(X, Y, aFlag))
+    m_Info = GetMonitor(MonitorFromPoint(X, Y, aFlag))
 End Sub
 
 Friend Sub NewR(ByVal X As Long, ByVal Y As Long, ByVal Width As Long, ByVal Height As Long, Optional ByVal aFlag As EMonitorDefault = EMonitorDefault.ToNearest)
     Dim R As RECT
     With R: .Left = X: .Top = Y: .Right = .Left + Width: .Bottom = .Top + Height: End With
-    m_Monitor = GetMonitor(MonitorFromRect(R, aFlag))
+    m_Info = GetMonitor(MonitorFromRect(R, aFlag))
 End Sub
 
 Friend Sub NewW(ByVal hWnd As LongPtr, Optional ByVal aFlag As EMonitorDefault = EMonitorDefault.ToNearest)
-    m_Monitor = GetMonitor(MonitorFromWindow(hWnd, aFlag))
+    m_Info = GetMonitor(MonitorFromWindow(hWnd, aFlag))
 End Sub
 
 Private Function GetMonitor(ByVal Handle As LongPtr) As MONITORINFO
@@ -126,33 +127,33 @@ Public Property Get Handle() As LongPtr
 End Property
 
 Public Property Get Device() As String
-    Device = Trim0(m_Monitor.szDevice)
+    Device = Trim0(m_Info.szDevice)
 End Property
 
 Public Property Get Left() As Long
-    Left = m_Monitor.rcMonitor.Left
+    Left = m_Info.rcMonitor.Left
 End Property
 Public Property Get Top() As Long
-    Top = m_Monitor.rcMonitor.Top
+    Top = m_Info.rcMonitor.Top
 End Property
 Public Property Get Width() As Long
-    Width = m_Monitor.rcMonitor.Right - Left
+    Width = m_Info.rcMonitor.Right - Left
 End Property
 Public Property Get Height() As Long
-    Height = m_Monitor.rcMonitor.Bottom - Top
+    Height = m_Info.rcMonitor.Bottom - Top
 End Property
 
 Public Property Get WorkLeft() As Long
-    WorkLeft = m_Monitor.rcWork.Left
+    WorkLeft = m_Info.rcWork.Left
 End Property
 Public Property Get WorkTop() As Long
-    WorkTop = m_Monitor.rcWork.Top
+    WorkTop = m_Info.rcWork.Top
 End Property
 Public Property Get WorkWidth() As Long
-    WorkWidth = m_Monitor.rcWork.Right - WorkLeft
+    WorkWidth = m_Info.rcWork.Right - WorkLeft
 End Property
 Public Property Get WorkHeight() As Long
-    WorkHeight = m_Monitor.rcWork.Bottom - WorkTop
+    WorkHeight = m_Info.rcWork.Bottom - WorkTop
 End Property
 
 Public Property Get ClipLeft() As Long
@@ -168,41 +169,43 @@ Public Property Get ClipHeight() As Long
     ClipHeight = m_Clip.Bottom - WorkTop
 End Property
 
-Public Property Get DeviceName() As String
-    DeviceName = m_Display.DeviceName
+Public Property Get DisplayDevice() As DisplayDevice
+    Set DisplayDevice = m_Display
 End Property
 
-Public Property Get DeviceString() As String
-    DeviceString = m_Display.DeviceString
+Public Property Get Displays() As Collection 'Of DisplayDevice
+    If m_Displays Is Nothing Then Set m_Displays = GetDisplayDevices(Me.Device)
+    Set Displays = m_Displays
 End Property
 
-Public Property Get StateFlags() As Long
-    StateFlags = m_Display.StateFlags
+Public Property Get Adapters() As Collection ' Of DisplayDevice
+    If m_Adapters Is Nothing Then Set m_Adapters = GetDisplayDevices(vbNullString)
+    Set Adapters = m_Adapters
 End Property
 
-Friend Function StateFlags_ToStr() As String
-    StateFlags_ToStr = m_Display.StateFlags & " := " & m_Display.StateFlags_ToStr
+Private Function GetDisplayDevice(ByVal DevName As String, ByVal i As Long) As DisplayDevice
+    Dim dd As New DisplayDevice
+    Dim lpDevNam As LongPtr
+    If Len(DevName) Then
+        DevName = DevName & vbNullChar
+        lpDevNam = StrPtr(DevName)
+    End If
+    Dim hr As Long: hr = EnumDisplayDevicesW(lpDevNam, i, dd.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
+    If hr Then Set GetDisplayDevice = dd
 End Function
 
-Public Property Get DeviceID() As String
-    DeviceID = m_Display.DeviceID
-End Property
-
-Public Property Get DeviceKey() As String
-    DeviceKey = m_Display.DeviceKey
-End Property
-
-Public Property Get Settings() As Collection ' Of DeviceMode
-    Set Settings = m_Display.Settings
-End Property
-
-Public Property Get SettingCurrent() As DeviceMode
-    Set SettingCurrent = m_Display.SettingCurrent
-End Property
-
-Public Property Get SettingRegistry() As DeviceMode
-    Set SettingRegistry = m_Display.SettingRegistry
-End Property
+Private Function GetDisplayDevices(ByVal DevName As String) As Collection
+    Dim Displays As New Collection
+    Dim dd As DisplayDevice
+    Dim i As Long
+    Do
+        Set dd = GetDisplayDevice(DevName, i)
+        If dd Is Nothing Then Exit Do
+        Displays.Add dd
+        i = i + 1
+    Loop
+    Set GetDisplayDevices = Displays
+End Function
 
 Private Function RECT_ToStr(R As RECT) As String
     With R
@@ -223,22 +226,17 @@ End Function
 
 Friend Function ToStr() As String
     Dim s As String
-    s = "Monitor {" & vbCrLf
-    s = s & "    Handle       = " & m_Handle & vbCrLf
-    s = s & "    W / H        = " & Me.Width & " / " & Me.Height & vbCrLf
-    s = s & "    Moni-" & RECT_ToStr(m_Monitor.rcMonitor) & vbCrLf
-    s = s & "    Work-" & RECT_ToStr(m_Monitor.rcWork) & vbCrLf
+    s = "MONITORINFO {" & vbCrLf
+    s = s & "    Handle = " & m_Handle & vbCrLf
+    s = s & "    W / H  = " & Me.Width & " / " & Me.Height & vbCrLf
+    s = s & "    Moni-" & RECT_ToStr(m_Info.rcMonitor) & vbCrLf
+    s = s & "    Work-" & RECT_ToStr(m_Info.rcWork) & vbCrLf
     If m_hDC <> 0 Then
-        s = s & "    hDC      = " & m_hDC & vbCrLf
+        s = s & "    hDC   = " & m_hDC & vbCrLf
     End If
     If Not RECT_IsNull(m_Clip) Then
         s = s & "    Clip-" & RECT_ToStr(m_Clip) & vbCrLf
     End If
-    s = s & "    Info.Device  = " & Me.Device & vbCrLf
-    s = s & "    DeviceName   = " & Me.DeviceName & vbCrLf
-    s = s & "    DeviceString = " & Me.DeviceString & vbCrLf
-    s = s & "    StateFlags   = " & Me.StateFlags_ToStr & vbCrLf
-    s = s & "    DeviceID     = " & Me.DeviceID & vbCrLf
-    s = s & "    DeviceKey    = " & Me.DeviceKey & vbCrLf
-    ToStr = s & "}"
+    s = s & "    Device = " & Me.Device & vbCrLf
+    ToStr = s & "}" '& vbCrLf
 End Function

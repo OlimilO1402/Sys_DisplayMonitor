@@ -68,7 +68,6 @@ End Type '} DISPLAY_DEVICEW, *PDISPLAY_DEVICEW, *LPDISPLAY_DEVICEW;
     Private Declare Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
     
 #End If
-Private m_DevName     As String
 Private m_Display     As DISPLAY_DEVICEW
 Private m_CurSetting  As DeviceMode
 Private m_RegSetting  As DeviceMode
@@ -81,7 +80,6 @@ Private Sub Class_Initialize()
 End Sub
 
 Friend Sub New_(Optional ByVal DevName As String = vbNullString, Optional ByRef i_inout As Long = 0)
-    m_DevName = DevName
     Dim lpDevNam As LongPtr
     If Len(DevName) Then
         DevName = DevName & vbNullChar
@@ -100,20 +98,16 @@ Public Property Get Ptr() As LongPtr
     Ptr = VarPtr(m_Display)
 End Property
 
-'Public Property Get PropDisplay() As String
-'    Dim d0 As String: d0 = Me.DeviceName
-'    Dim pos As Long: pos = InStrRev(d0, "\")
-'    Dim dn As String: If pos > 0 Then dn = Left(d0, pos - 1)
-'    If Len(dn) < 5 Then dn = d0
-'    PropDisplay = dn 'Trim0(m_Display.DeviceName)
-'End Property
+Public Property Get PropDisplay() As String
+    Dim d0 As String: d0 = Me.DeviceName
+    Dim pos As Long: pos = InStrRev(d0, "\")
+    Dim dn As String: If pos > 0 Then dn = Left(d0, pos - 1)
+    If Len(dn) < 5 Then dn = d0
+    PropDisplay = dn 'Trim0(m_Display.DeviceName)
+End Property
 
 Public Property Get DeviceName() As String
     DeviceName = Trim0(m_Display.DeviceName)
-End Property
-
-Private Property Get DevName() As String
-    DevName = m_DevName: If Len(DevName) = 0 Then DevName = Me.DeviceName
 End Property
 
 Public Property Get DeviceString() As String
@@ -198,7 +192,7 @@ End Function
 
 Public Property Get Settings() As Collection
     If m_Settings Is Nothing Then
-        Set m_Settings = GetDeviceModes(DevName, EDS_ROTATEDMODE)  ' EDS_RAWMODE) '1)
+        Set m_Settings = GetDeviceModes(Me.PropDisplay, EDS_ROTATEDMODE)  ' EDS_RAWMODE) '1)
     End If
     Set Settings = m_Settings
 End Property
@@ -211,19 +205,19 @@ Public Property Get SettingsGraphicsCard() As Collection 'Of DeviceMode
 End Property
 
 Public Property Get SettingCurrent() As DeviceMode
-    If m_CurSetting Is Nothing Then Set m_CurSetting = GetDeviceMode(DevName, ENUM_CURRENT_SETTINGS, EDS_ROTATEDMODE) ' EDS_RAWMODE) '1)
+    If m_CurSetting Is Nothing Then Set m_CurSetting = GetDeviceMode(Me.Display, ENUM_CURRENT_SETTINGS, EDS_ROTATEDMODE) ' EDS_RAWMODE) '1)
     Set SettingCurrent = m_CurSetting
 End Property
 
 Public Property Get SettingRegistry() As DeviceMode
-    If m_RegSetting Is Nothing Then Set m_RegSetting = GetDeviceMode(DevName, ENUM_REGISTRY_SETTINGS, EDS_ROTATEDMODE) ' EDS_RAWMODE) '1)
+    If m_RegSetting Is Nothing Then Set m_RegSetting = GetDeviceMode(Me.Display, ENUM_REGISTRY_SETTINGS, EDS_ROTATEDMODE) ' EDS_RAWMODE) '1)
     Set SettingRegistry = m_RegSetting
 End Property
 
 Friend Function ToStr() As String
     Dim s As String
     s = "DISPLAY_DEVICEW {" & vbCrLf
-    's = s & "    PropDisplay  = " & Me.PropDisplay & vbCrLf
+    s = s & "    PropDisplay  = " & Me.PropDisplay & vbCrLf
     s = s & "    DeviceName   = " & Me.DeviceName & vbCrLf
     s = s & "    DeviceString = " & Me.DeviceString & vbCrLf
     s = s & "    StateFlags   = " & Me.StateFlags & " := " & Me.StateFlags_ToStr & vbCrLf

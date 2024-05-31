@@ -1,4 +1,4 @@
-Attribute VB_Name = "Monitors"
+Attribute VB_Name = "MPC"
 Option Explicit
 
 Private Const EDD_GET_DEVICE_INTERFACE_NAME As Long = &H1&
@@ -45,7 +45,6 @@ Private m_Monitors As Collection
 'Private m_Count As Long
 
 Public Sub Init()
-    Set m_GraCard = New DisplayAdapter ' GetDisplayAdapter
     
     'm_Count = 10
     Set m_Monitors = New Collection
@@ -54,7 +53,13 @@ Public Sub Init()
     If clip Then lprcClip = VarPtr(m_Clip)
     Dim hr As Long: hr = EnumDisplayMonitors(m_hDC, lprcClip, FncPtr(AddressOf MonitorEnumProc), 0)
     'Debug.Print hr
+    
+    Set m_GraCard = New DisplayAdapter ' GetDisplayAdapter
 End Sub
+
+Public Property Get GraphicsCard() As DisplayAdapter
+    Set GraphicsCard = m_GraCard
+End Property
 
 Public Property Get hDC() As LongPtr
     hDC = m_hDC
@@ -63,16 +68,16 @@ Public Property Let hDC(ByVal Value As LongPtr)
     m_hDC = Value
 End Property
 
-'Public Function Trim0(ByVal s As String) As String
-'    Dim p0 As Long: p0 = InStr(1, s, vbNullChar)
-'    If p0 Then Trim0 = Left(s, p0 - 1)
-'End Function
+Public Function Trim0(ByVal s As String) As String
+    Dim p0 As Long: p0 = InStr(1, s, vbNullChar)
+    If p0 Then Trim0 = Left(s, p0 - 1)
+End Function
 
 Private Function MonitorEnumProc(ByVal HMonitor_Param1 As LongPtr, ByVal hDC_Param2 As LongPtr, ByVal lpRECT_Param3 As LongPtr, ByVal Param4 As LongPtr) As Long
     If m_Monitors Is Nothing Then Set m_Monitors = New Collection
     Dim aMonitor As Monitor: Set aMonitor = MNew.Monitor(HMonitor_Param1, hDC_Param2, lpRECT_Param3)
     If aMonitor.Handle <> 0 Then
-        m_Monitors.Add aMonitor
+        m_Monitors.Add aMonitor ', aMonitor.Device
         MonitorEnumProc = 1
         Exit Function
     End If
@@ -96,10 +101,21 @@ Public Property Get ItemByHandle(ByVal HMONITOR As LongPtr) As Monitor
     Next
 End Property
 
-'Private Function GetDisplayAdapter() As DisplayAdapter
-'    Dim da As New DisplayAdapter
-'    Dim lpNull As LongPtr, i0 As Long
-'    Dim hr As Long: hr = EnumDisplayDevicesW(lpNull, i0, da.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
-'    If hr Then Set GetDisplayAdapter = da
-'End Function
-'
+Public Property Get ItemByKey(ByVal DevName As String) As Monitor
+    Dim m As Monitor
+    For Each m In m_Monitors
+        If m.Device = DevName Then
+            Set ItemByKey = m
+            Exit Property
+        End If
+    Next
+End Property
+
+Private Function GetDisplayAdapter() As DisplayAdapter
+    Dim da As New DisplayAdapter
+    Dim lpNull As LongPtr, i0 As Long
+    Dim hr As Long: hr = EnumDisplayDevicesW(lpNull, i0, da.Ptr, EDD_GET_DEVICE_INTERFACE_NAME)
+    If hr Then Set GetDisplayAdapter = da
+End Function
+
+

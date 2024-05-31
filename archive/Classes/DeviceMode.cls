@@ -412,14 +412,6 @@ Public Property Get PixelsHeight() As Long
     PixelsHeight = m_DevMode.dmPelsHeight
 End Property
 
-Public Property Get WHMax() As Long
-    WHMax = Max(Me.PixelsWidth, Me.PixelsHeight)
-End Property
-
-Public Property Get WHMin() As Long
-    WHMin = Min(Me.PixelsWidth, Me.PixelsHeight)
-End Property
-
 Public Property Get DisplayFlags() As Long
     DisplayFlags = m_DevMode.dmDisplayFlags
 End Property
@@ -427,24 +419,6 @@ End Property
 Public Property Get DisplayFrequency() As Long
     DisplayFrequency = m_DevMode.dmDisplayFrequency
 End Property
-
-Public Function Compare(other As DeviceMode) As Long
-    If Me.WHMax < other.WHMax Then Compare = -1: Exit Function
-    If other.WHMax < Me.WHMax Then Compare = 1:  Exit Function
-    
-    If Me.WHMin < other.WHMin Then Compare = -1: Exit Function
-    If other.WHMin < Me.WHMin Then Compare = 1:  Exit Function
-    
-    If Me.BitsPerPixel < other.BitsPerPixel Then Compare = -1: Exit Function
-    If other.BitsPerPixel < Me.BitsPerPixel Then Compare = 1:  Exit Function
-    
-    If Me.DisplayFrequency < other.DisplayFrequency Then Compare = -1: Exit Function
-    If other.DisplayFrequency < Me.DisplayFrequency Then Compare = 1:  Exit Function
-    
-    If Me.DisplayOrientation < other.DisplayOrientation Then Compare = -1: Exit Function
-    If other.DisplayOrientation < Me.DisplayOrientation Then Compare = 1:  Exit Function
-    
-End Function
 
 'Public Property Get Orientation() As Long
 '    Orientation = m_DevMode.dmOrientation
