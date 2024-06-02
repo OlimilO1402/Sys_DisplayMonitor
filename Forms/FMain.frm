@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form FMain 
-   Caption         =   "FMain"
-   ClientHeight    =   13455
+   Caption         =   "DisplayMonitor"
+   ClientHeight    =   9375
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   15375
@@ -14,51 +14,68 @@ Begin VB.Form FMain
       Italic          =   0   'False
       Strikethrough   =   0   'False
    EndProperty
+   Icon            =   "FMain.frx":0000
    LinkTopic       =   "FMain"
-   ScaleHeight     =   13455
+   ScaleHeight     =   9375
    ScaleWidth      =   15375
    StartUpPosition =   3  'Windows-Standard
-   Begin VB.ListBox List6 
+   Begin VB.ListBox LBDispConnectors 
       Appearance      =   0  '2D
-      Height          =   1785
-      ItemData        =   "FMain.frx":0000
+      BeginProperty Font 
+         Name            =   "Segoe UI"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   4875
+      ItemData        =   "FMain.frx":1782
+      Left            =   0
+      List            =   "FMain.frx":1789
+      TabIndex        =   1
+      Top             =   840
+      Width           =   2415
+   End
+   Begin VB.ComboBox Combo9 
+      Height          =   315
+      Left            =   12480
+      TabIndex        =   14
+      Top             =   6360
+      Width           =   2535
+   End
+   Begin VB.ComboBox Combo8 
+      Height          =   315
+      Left            =   9960
+      TabIndex        =   13
+      Top             =   6360
+      Width           =   2535
+   End
+   Begin VB.ComboBox Combo7 
+      Height          =   315
+      Left            =   7440
+      TabIndex        =   12
+      Top             =   6360
+      Width           =   2535
+   End
+   Begin VB.ComboBox Combo6 
+      Height          =   315
+      Left            =   4920
+      TabIndex        =   11
+      Top             =   6360
+      Width           =   2535
+   End
+   Begin VB.ComboBox Combo5 
+      Appearance      =   0  '2D
+      Height          =   315
       Left            =   2400
-      List            =   "FMain.frx":0002
-      TabIndex        =   8
-      Top             =   6120
-      Width           =   2415
-   End
-   Begin VB.ListBox List7 
-      Appearance      =   0  '2D
-      Height          =   1785
-      ItemData        =   "FMain.frx":0004
-      Left            =   4800
-      List            =   "FMain.frx":0006
-      TabIndex        =   7
-      Top             =   6120
-      Width           =   2415
-   End
-   Begin VB.ListBox List8 
-      Appearance      =   0  '2D
-      Height          =   1785
-      ItemData        =   "FMain.frx":0008
-      Left            =   7200
-      List            =   "FMain.frx":000A
-      TabIndex        =   6
-      Top             =   6120
-      Width           =   2415
-   End
-   Begin VB.ListBox List9 
-      Appearance      =   0  '2D
-      Height          =   1785
-      ItemData        =   "FMain.frx":000C
-      Left            =   9600
-      List            =   "FMain.frx":000E
-      TabIndex        =   5
-      Top             =   6120
-      Width           =   2415
+      TabIndex        =   10
+      Top             =   6360
+      Width           =   2535
    End
    Begin VB.TextBox TBDispMonitor 
+      Appearance      =   0  '2D
       BeginProperty Font 
          Name            =   "Consolas"
          Size            =   9.75
@@ -68,7 +85,7 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   3135
+      Height          =   3375
       Left            =   2400
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
@@ -77,6 +94,7 @@ Begin VB.Form FMain
       Width           =   12975
    End
    Begin VB.TextBox TBDispConnector 
+      Appearance      =   0  '2D
       BeginProperty Font 
          Name            =   "Consolas"
          Size            =   9.75
@@ -94,55 +112,44 @@ Begin VB.Form FMain
       Top             =   480
       Width           =   12975
    End
-   Begin VB.ListBox LBDispConnectors 
-      Appearance      =   0  '2D
-      BeginProperty Font 
-         Name            =   "Segoe UI"
-         Size            =   9.75
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   4620
-      ItemData        =   "FMain.frx":0010
-      Left            =   0
-      List            =   "FMain.frx":0017
-      TabIndex        =   1
-      Top             =   840
+   Begin VB.Label Label5 
+      Caption         =   "PixelsWidth "
+      Height          =   375
+      Left            =   2400
+      TabIndex        =   9
+      Top             =   6000
       Width           =   2415
    End
    Begin VB.Label Label6 
-      Caption         =   "Label1"
+      Caption         =   "PixelsHeight "
       Height          =   375
-      Left            =   2400
-      TabIndex        =   12
-      Top             =   5760
+      Left            =   4920
+      TabIndex        =   8
+      Top             =   6000
       Width           =   2415
    End
    Begin VB.Label Label7 
-      Caption         =   "Label1"
+      Caption         =   "DisplayRotation "
       Height          =   375
-      Left            =   4800
-      TabIndex        =   11
-      Top             =   5760
+      Left            =   7440
+      TabIndex        =   7
+      Top             =   6000
       Width           =   2415
    End
    Begin VB.Label Label8 
-      Caption         =   "Label1"
+      Caption         =   "BitsPerPixel"
       Height          =   375
-      Left            =   7200
-      TabIndex        =   10
-      Top             =   5760
+      Left            =   9960
+      TabIndex        =   6
+      Top             =   6000
       Width           =   2415
    End
    Begin VB.Label Label9 
-      Caption         =   "Label1"
+      Caption         =   "DisplayFrequency"
       Height          =   375
-      Left            =   9600
-      TabIndex        =   9
-      Top             =   5760
+      Left            =   12480
+      TabIndex        =   5
+      Top             =   6000
       Width           =   2415
    End
    Begin VB.Label LlDispConnectors 
@@ -211,7 +218,9 @@ Private Sub LBDispConnectors_Click()
     UpdateViewDispConnector m_Connector
     Set m_Monitor = m_Connector.Monitor
     If m_Monitor Is Nothing Then Exit Sub
-    Set m_Filter = MNew.DisplayModeFilter(m_Monitor.Settings)
+    Dim col As Collection: Set col = m_Monitor.Settings
+    MPtr.Col_Sort col
+    Set m_Filter = MNew.DisplayModeFilter(col) 'm_Monitor.Settings)
     UpdateViewFilter m_Filter
     
 End Sub
@@ -235,40 +244,53 @@ Sub UpdateViewDispConnector(Connector As DisplayConnector)
 End Sub
 
 Sub UpdateViewFilter(Filter As DisplayModeFilter)
-    List6.Clear
-    List7.Clear
-    List8.Clear
-    List9.Clear
+    Combo5.Clear
+    Combo6.Clear
+    Combo7.Clear
+    Combo8.Clear
+    Combo9.Clear
     If Filter Is Nothing Then Exit Sub
     
     Dim i As Long
-    If Not Filter.FilterSize Is Nothing Then
-        For i = 1 To Filter.FilterSize.Count
-            List6.AddItem Filter.FilterSize.Item(i)
-        Next
+    If Not Filter.FilterWMax Is Nothing Then
+        Col_ToListControl Filter.FilterWMax, Combo5, True
+        'For i = 1 To Filter.FilterWMax.Count
+        '    Combo5.AddItem Filter.FilterWMax.Item(i)
+        'Next
         'List6.Sorted = True
-        Label6.Caption = List6.ListCount
+        Label5.Caption = Combo5.ListCount
+    End If
+    If Not Filter.FilterHMin Is Nothing Then
+        Col_ToListControl Filter.FilterHMin, Combo6, True
+        'For i = 1 To Filter.FilterHMin.Count
+        '    Combo6.AddItem Filter.FilterHMin.Item(i)
+        'Next
+        'List6.Sorted = True
+        Label6.Caption = Combo6.ListCount
     End If
     If Not Filter.FilterRotation Is Nothing Then
-        For i = 1 To Filter.FilterRotation.Count
-            List7.AddItem Filter.FilterRotation.Item(i)
-        Next
+        Col_ToListControl Filter.FilterRotation, Combo7, True
+        'For i = 1 To Filter.FilterRotation.Count
+        '    Combo7.AddItem Filter.FilterRotation.Item(i)
+        'Next
         'List7.Sorted = True
-        Label7.Caption = List7.ListCount
+        Label7.Caption = Combo7.ListCount
     End If
     If Not Filter.FilterBitsPerPixel Is Nothing Then
-        For i = 1 To Filter.FilterBitsPerPixel.Count
-            List8.AddItem Filter.FilterBitsPerPixel.Item(i)
-        Next
+        Col_ToListControl Filter.FilterBitsPerPixel, Combo8, True
+        'For i = 1 To Filter.FilterBitsPerPixel.Count
+        '    Combo8.AddItem Filter.FilterBitsPerPixel.Item(i)
+        'Next
         'List8.Sorted = True
-        Label8.Caption = List8.ListCount
+        Label8.Caption = Combo8.ListCount
     End If
     If Not Filter.FilterFrequency Is Nothing Then
-        For i = 1 To Filter.FilterFrequency.Count
-            List9.AddItem Filter.FilterFrequency.Item(i)
-        Next
+        Col_ToListControl Filter.FilterFrequency, Combo9, True
+        'For i = 1 To Filter.FilterFrequency.Count
+        '    Combo9.AddItem Filter.FilterFrequency.Item(i)
+        'Next
         'List9.Sorted = True
-        Label9.Caption = List9.ListCount
+        Label9.Caption = Combo9.ListCount
     End If
     
 End Sub
