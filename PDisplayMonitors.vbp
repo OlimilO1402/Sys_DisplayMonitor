@@ -12,6 +12,7 @@ Class=DisplayDevice; Classes\DisplayDevice.cls
 Class=DisplayModeFilter; Classes\DisplayModeFilter.cls
 Class=Monitor; Classes\Monitor.cls
 ResFile32="Resources\MyRes.res"
+Module=MMath; ..\Math\Modules\MMath.bas
 Startup="Sub Main"
 HelpFile=""
 Title="PDisplayMonitors"

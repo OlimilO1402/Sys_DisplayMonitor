@@ -218,9 +218,9 @@ Private Sub LBDispConnectors_Click()
     UpdateViewDispConnector m_Connector
     Set m_Monitor = m_Connector.Monitor
     If m_Monitor Is Nothing Then Exit Sub
-    Dim col As Collection: Set col = m_Monitor.Settings
-    MPtr.Col_Sort col
-    Set m_Filter = MNew.DisplayModeFilter(col) 'm_Monitor.Settings)
+    Dim Col As Collection: Set Col = m_Monitor.Settings
+    MPtr.Col_Sort Col
+    Set m_Filter = MNew.DisplayModeFilter(Col) 'm_Monitor.Settings)
     UpdateViewFilter m_Filter
     
 End Sub
@@ -252,45 +252,45 @@ Sub UpdateViewFilter(Filter As DisplayModeFilter)
     If Filter Is Nothing Then Exit Sub
     
     Dim i As Long
-    If Not Filter.FilterWMax Is Nothing Then
-        Col_ToListControl Filter.FilterWMax, Combo5, True
+    If Not Filter.AllWMax Is Nothing Then
+        MPtr.Col_ToListCtrl Filter.AllWMax, Combo5, True
         'For i = 1 To Filter.FilterWMax.Count
         '    Combo5.AddItem Filter.FilterWMax.Item(i)
         'Next
         'List6.Sorted = True
-        Label5.Caption = Combo5.ListCount
+        Label5.Caption = "PixelsWidth:" & " " & Combo5.ListCount
     End If
-    If Not Filter.FilterHMin Is Nothing Then
-        Col_ToListControl Filter.FilterHMin, Combo6, True
+    If Not Filter.AllHMin Is Nothing Then
+        MPtr.Col_ToListCtrl Filter.AllHMin, Combo6, True
         'For i = 1 To Filter.FilterHMin.Count
         '    Combo6.AddItem Filter.FilterHMin.Item(i)
         'Next
         'List6.Sorted = True
-        Label6.Caption = Combo6.ListCount
+        Label6.Caption = "PixelsHeight:" & " " & Combo6.ListCount
     End If
-    If Not Filter.FilterRotation Is Nothing Then
-        Col_ToListControl Filter.FilterRotation, Combo7, True
+    If Not Filter.AllRota Is Nothing Then
+        MPtr.Col_ToListCtrl Filter.AllRota, Combo7, True
         'For i = 1 To Filter.FilterRotation.Count
         '    Combo7.AddItem Filter.FilterRotation.Item(i)
         'Next
         'List7.Sorted = True
-        Label7.Caption = Combo7.ListCount
+        Label7.Caption = "DisplayRotation:" & " " & Combo7.ListCount
     End If
-    If Not Filter.FilterBitsPerPixel Is Nothing Then
-        Col_ToListControl Filter.FilterBitsPerPixel, Combo8, True
+    If Not Filter.AllBpPx Is Nothing Then
+        MPtr.Col_ToListCtrl Filter.AllBpPx, Combo8, True
         'For i = 1 To Filter.FilterBitsPerPixel.Count
         '    Combo8.AddItem Filter.FilterBitsPerPixel.Item(i)
         'Next
         'List8.Sorted = True
-        Label8.Caption = Combo8.ListCount
+        Label8.Caption = "BitsPerPixel:" & " " & Combo8.ListCount
     End If
-    If Not Filter.FilterFrequency Is Nothing Then
-        Col_ToListControl Filter.FilterFrequency, Combo9, True
+    If Not Filter.AllFreq Is Nothing Then
+        MPtr.Col_ToListCtrl Filter.AllFreq, Combo9, True
         'For i = 1 To Filter.FilterFrequency.Count
         '    Combo9.AddItem Filter.FilterFrequency.Item(i)
         'Next
         'List9.Sorted = True
-        Label9.Caption = Combo9.ListCount
+        Label9.Caption = "DisplayFrequency:" & " " & Combo9.ListCount
     End If
     
 End Sub
