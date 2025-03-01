@@ -14,6 +14,7 @@ End Type
     
     Private Declare PtrSafe Function EnumDisplayMonitors Lib "user32" (ByVal hDC As LongPtr, ByVal lprcClip As LongPtr, ByVal lpfnEnum As LongPtr, ByVal dwData As LongPtr) As Long
     Private Declare PtrSafe Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
+    Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
     
 #Else
     
@@ -35,6 +36,9 @@ End Type
     'https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw
     'BOOL EnumDisplayDevicesW( [in] LPCWSTR lpDevice, [in] DWORD iDevNum, [out] PDISPLAY_DEVICEW lpDisplayDevice, [in] DWORD dwFlags);
     Private Declare Function EnumDisplayDevicesW Lib "user32" (ByVal lpDevice As LongPtr, ByVal iDevNum As Long, ByVal lpDisplayDevice As LongPtr, ByVal dwFlags As Long) As Long
+
+    'https://learn.microsoft.com/de-de/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
+    Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
 
 #End If
 
